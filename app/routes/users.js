@@ -2,15 +2,16 @@ const Router = require('koa-router');
 const router = new Router({
     prefix: '/users'
 });
-let db = [{
-    name: 'Susan',
-    age: 21
-}]
-router.get('/', ctx => {
-    ctx.body = db;
-})
-router.post('/', ctx => {
-    db.push(ctx.request.body);
-    ctx.body = ctx.request.body;
-})
+const {
+    find,
+    findById,
+    create,
+    update,
+    delele: del
+} = require('../controllers/user');
+router.get('/', find);
+router.get('/:id', findById);
+router.post('/', create);
+router.put('/:id', update);
+router.delete('/:id', del);
 module.exports = router;
