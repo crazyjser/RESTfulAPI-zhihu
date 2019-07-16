@@ -1,30 +1,37 @@
-const db = [{
-    name: 'Susan',
-    age: 21
-}]
+const User = require('../models/users');
 class UserCtrl {
     constructor() {}
-    find(ctx) {
-       ctx.body = db; 
+    async find(ctx) {
+        let users = await User.find();
+        ctx.body = users;
     }
-    findById(ctx) {
-        let user = db[ctx.params.id];
-        if (user) {
-            ctx.body = user;
-        } else {
-            ctx.body = {}
-        }
+    async findById(ctx) {
+        let user = await User.findById(ctx.params.id);
+        if (!user) ctx.throw('404', '用户不存在');
+        ctx.body = user;
     }
-    create(ctx) {
-        db.push(ctx.request.body)
-        ctx.body = ctx.request.body;
+    async create(ctx) {
+        ctx.verifyParams({
+            name: {
+                type: 'string',
+                require: true,
+            },
+            age: {
+                type: 'number',
+                require: false,
+            }
+        })
+        let user = await new User(ctx.request.body).save();
+        ctx.body = user;
     }
-    update(ctx) {
-        db[ctx.params.id * 1] = ctx.request.body;
-        ctx.body = ctx.request.body;
+    async update(ctx) {
+        let user = await User.findByIdAndUpdate(ctx.params.id, ctx.request.body);
+        if (!user) ctx.throw('404', '用户不存在');
+        ctx.body = user;
     }
-    delele(ctx) {
-        db.splice(ctx.params.id * 1, 1);
+    async delele(ctx) {
+        let user = await User.findByIdAndRemove(ctx.params.id);
+        if (!user) ctx.throw('404', '用户不存在');
         ctx.status = 204;
     }
 }

@@ -4,7 +4,8 @@
   "description": "仿知乎的RESTful API 学习",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development nodemon app/index.js"
+    "start:dev": "cross-env NODE_ENV=development nodemon app",
+    "start:pro": "nodemon app"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,10 @@
   "dependencies": {
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
-    "koa-router": "^7.4.0"
+    "koa-json-error": "^3.1.2",
+    "koa-parameter": "^3.0.1",
+    "koa-router": "^7.4.0",
+    "mongoose": "^5.6.4"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
