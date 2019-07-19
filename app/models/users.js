@@ -5,9 +5,14 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    age: {
+    password: {
+        type: String,
+        required: true,
+        select: false,
+    },
+    __v: {
         type: Number,
-        default: 12,
-    }
+        select: false,
+    },
 })
 module.exports = model('User', userSchema);
