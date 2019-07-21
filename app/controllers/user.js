@@ -1,5 +1,5 @@
 const User = require('../models/users');
-const JWT = require('jsonwebtoken');
+const jsonwebtoken = require('jsonwebtoken');
 const { secret } = require('../config');
 class UserCtrl {
     constructor() {}
@@ -32,6 +32,12 @@ class UserCtrl {
         if (repeatUser) ctx.throw(409, '用户名已被占用');
         let user = await new User(ctx.request.body).save();
         ctx.body = user;
+    }
+    async checkAuth (ctx, next) {
+        if (ctx.params.id !== ctx.state.user._id) {
+            ctx.throw(401, '没有权限');
+        }
+        await next();
     }
     async update(ctx) {
         ctx.verifyParams({
@@ -67,7 +73,7 @@ class UserCtrl {
         let user = await User.findOne(ctx.request.body);
         if (!user) ctx.throw(401, '用户名或者密码错误');
         let { _id, name } = user;
-        let token = JWT.sign({ _id, name }, secret, {expiresIn: '1d'});
+        let token = jsonwebtoken.sign({ _id, name }, secret, {expiresIn: '1d'});
         ctx.body = { token };
     }
 }
